@@ -24,11 +24,11 @@ class tablero():
             array_c = []
             for j in range(0, 8):
                 if i==1:
-                    button = tk.Button(root, image=pb, command= lambda column=j : white_p.options(column, 1, 2), bg="red", width=50, height=50)
+                    button = tk.Button(root, image=pb, command= lambda column=j : white_p.pyimage1(column, 1, 2), bg="red", width=50, height=50)
                     array_c.append(button)
                     button.grid(row=1, column=j)
                 elif i==6:
-                    button = tk.Button(root, image=pn, command=lambda column=j: black_p.options(column, 6, -2), bg="red", width=50, height=50)
+                    button = tk.Button(root, image=pn, command=lambda column=j: black_p.pyimage1(column, 6, -2), bg="red", width=50, height=50)
                     array_c.append(button)
                     button.grid(row=6, column=j)
                 else:
@@ -38,7 +38,8 @@ class tablero():
             self.casillas.append(array_c)
 
         """PIEZAS BLANCAS"""
-        self.casillas[0][0].config(image=tb)
+        white_tr = pieza_blanca(tb)
+        self.casillas[0][0].config(image=tb, command=lambda : white_tr.torre_option(0,0))
         self.casillas[0][1].config(image=ab)
         self.casillas[0][2].config(image=cb)
         self.casillas[0][3].config(image=rb)
@@ -68,50 +69,83 @@ class pieza_blanca:
         self.imagen_pieza= imagen_pieza
         pass
     def back_to_normal(self):
-        for i in range(8):
+        global sw_w,sw_b
+        print(sw_w, sw_b)
+        for i in range(0,8):
+
             for k in tablero.casillas[i]:
                 if dict(k.config())["background"][-1] !="red":
-                    if dict(k.config())["image"][-1] !="pyimage2":
-                        k.config(bg="red")
+
+                    imagen_ = dict(k.config())["image"][-1]
+                    if imagen_ !="pyimage2":
+                        if imagen_ =="pyimage1":
+                            objetooo = pieza_blanca(pb)
+                            k.config(bg="red",command=lambda row = i, column = tablero.casillas[i].index(k) :objetooo.pyimage1(column,row,1))
+                        elif imagen_ =="pyimage8":
+                            objetc = pieza_negra(pn)
+                            k.config(bg="red",command=lambda row = i, column = tablero.casillas[i].index(k) :objetc.pyimage1(column,row,-1))
+                        else:
+                            k.config(bg="red", command="")
+
+
                     else:
                         k.config(bg="red",command="")
+
+    def torre_option(self,first_square,column):
+        self.back_to_normal()
+        for i in range(0,8):
+
+            tablero.casillas[first_square][i].config(bg="blue")
+            tablero.casillas[first_square][-i].config(bg="blue")
+
+
+        for j in range(0,8):
+            tablero.casillas[j][column].config(bg="blue")
+            tablero.casillas[-j][column].config(bg="blue")
+
+
+            pass
+
+
     def asesinar(self,first_square,column,last_column,row,lenght):
+        self.back_to_normal()
+
         global sw_w,sw_b
-        tablero.casillas[row][last_column].config(image=self.imagen_pieza,bg="red",command = lambda: self.options(last_column,row,lenght))
+
+
+        tablero.casillas[row][last_column].config(image=self.imagen_pieza, bg="red", command = lambda: self.pyimage1(last_column, row, lenght))
         tablero.casillas[first_square][column].config(image=default, command="")
         for j in range(first_square + self.step, first_square + self.step + lenght, self.step):
             tablero.casillas[j][column].config(bg="red")
             tablero.casillas[j][column].config(command="")
         sw_b = True
         sw_w = False
-    def options(self, column, first_square, movimiento):
-
-        global sw_w, sw_b,pieza_seleccionada
+    def pyimage1(self, column, first_square, movimiento):
+        global sw_w, sw_b
         assert sw_w == True
         self.back_to_normal()
-
         try:
             if dict(tablero.casillas[first_square+1][column+1].config())["image"][-1]!="pyimage2":
                 tablero.casillas[first_square+1][column+1].config(bg ="purple", command= lambda row=first_square+1,last_column=column+1: self.asesinar(first_square,column,last_column ,row,movimiento))
-            if dict(tablero.casillas[first_square + 1][column - 1].config())["image"][-1] != "pyimage2":
-                tablero.casillas[first_square + 1][column - 1].config(bg="purple", command=lambda row=first_square + 1,
-                                                                                                  last_column=column - 1: self.asesinar(
-                    first_square, column, last_column, row, movimiento))
 
 
         except:
             pass
-
-
+        try:
+            if dict(tablero.casillas[first_square + 1][column - 1].config())["image"][-1] != "pyimage2":
+                tablero.casillas[first_square + 1][column - 1].config(bg="purple", command=lambda row=first_square + 1,
+                                                                                                  last_column=column - 1: self.asesinar(
+                    first_square, column, last_column, row, movimiento))
+        except:
+            pass
         for i in range(first_square+self.step,first_square+self.step+movimiento,self.step):
             configuracion = tablero.casillas[i][column].config()
             if dict(configuracion)["image"][-1] !="pyimage2":
                 break
 
-            tablero.casillas[i][column].config(bg ="blue", command= lambda row=i: self.mover(first_square,column, row, movimiento))
+            tablero.casillas[i][column].config(bg ="blue", command= lambda row=i: self.mover(first_square,column, row, movimiento-1))
 
     def mover(self,first_square,column,last_square,lenght):
-        self.back_to_normal()
 
         global sw_w, sw_b
 
@@ -120,9 +154,13 @@ class pieza_blanca:
         for j in range(first_square+self.step,first_square+self.step+lenght,self.step):
             tablero.casillas[j][column].config(bg="red")
             tablero.casillas[j][column].config(command="")
-        tablero.casillas[last_square][column].config(command = lambda: self.options(column,last_square,lenght))
+        tablero.casillas[last_square][column].config(command = lambda: self.pyimage1(column, last_square, lenght))
         sw_b =True
         sw_w = False
+        self.back_to_normal()
+
+
+
 
 class pieza_negra(pieza_blanca):
     step = -1
@@ -132,7 +170,7 @@ class pieza_negra(pieza_blanca):
         global sw_w, sw_b
         sw_w = True
         sw_b = False
-    def options(self, column, first_square, movimiento):
+    def pyimage1(self, column, first_square, movimiento):
         global sw_w, sw_b,pieza_seleccionada_negra
         assert sw_b == True
         self.back_to_normal()
@@ -140,6 +178,9 @@ class pieza_negra(pieza_blanca):
         try:
             if dict(tablero.casillas[first_square - 1][column - 1].config())["image"][-1] != "pyimage2":
                 tablero.casillas[first_square - 1][column - 1].config(bg="purple", command=lambda row=first_square - 1,last_column=column -1: self.asesinar(
+                    first_square, column, last_column, row, movimiento))
+            if dict(tablero.casillas[first_square - 1][column + 1].config())["image"][-1] != "pyimage2":
+                tablero.casillas[first_square - 1][column + 1].config(bg="purple", command=lambda row=first_square - 1,last_column=column +1: self.asesinar(
                     first_square, column, last_column, row, movimiento))
         except:
             pass
@@ -149,12 +190,15 @@ class pieza_negra(pieza_blanca):
             if dict(configuracion)["image"][-1] != "pyimage2":
                 break
 
-            tablero.casillas[i][column].config(bg ="blue", command= lambda row=i: self.mover(first_square,column, row, movimiento))
+            tablero.casillas[i][column].config(bg ="blue", command= lambda row=i: self.mover(first_square,column, row, movimiento+1))
     def mover(self,first_square,column,last_square,lenght):
-        super().mover(first_square,column,last_square,lenght)
-        global sw_w,sw_b
+        super().mover(first_square, column, last_square, lenght)
+
+        global sw_w, sw_b
         sw_w = True
         sw_b = False
+        self.back_to_normal()
+
 
 
 
