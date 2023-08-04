@@ -5,7 +5,8 @@ press = True
 # Crear una instancia de la clase Tk (raíz de la aplicación)
 from PIL import Image, ImageTk
 
-
+sw_w=True
+sw_b=False
 # Cargar la imagen y mantener una referencia
 class tablero():
 
@@ -55,7 +56,7 @@ class tablero():
         self.casillas[0][3].config(image=rb)
         self.casillas[0][-4].config(image=qb)
         self.casillas[0][-3].config(image=ab, command = lambda : white_al.pyimage4(5,0))
-        self.casillas[0][-2].config(image=cb, command = lambda : white_al.pyimage4(6,0))
+        self.casillas[0][-2].config(image=cb, command = lambda : white_cb.pyimage5(6,0))
         self.casillas[0][-1].config(image=tb,  command=lambda : white_tr.pyimage3(7, 0))
         """PIEZAS NEGRAS"""
         self.casillas[7][0].config(image=tn, command=lambda : black_tr.pyimage3(0, 7))
@@ -72,8 +73,7 @@ class tablero():
         #self.piezas_blancas.append(button2)
 
 
-sw_w=True
-sw_b=False
+
 class pieza_blanca:
     piezas = ["pyimage1", "pyimage3", "pyimage4", "pyimage5", "pyimage6", "pyimage7"]
 
@@ -82,9 +82,7 @@ class pieza_blanca:
         self.imagen_pieza= imagen_pieza
         pass
     def back_to_normal(self):
-        global sw_w,sw_b
         for i in range(0,8):
-
             for k in tablero.casillas[i]:
                 imagen_ = dict(k.config())["image"][-1]
                 if dict(k.config())["background"][-1] !="red":
@@ -97,23 +95,23 @@ class pieza_blanca:
                         objeto_2 = pieza_negra(pn)
                         k.config(command=lambda row = i, column = tablero.casillas[i].index(k): objeto_2.pyimage8(column,row,-1))
                     elif str(imagen_) =="pyimage9":
-                        objeto_4 = pieza_negra(tn)
-                        k.config(command=lambda row = i, column = tablero.casillas[i].index(k): objeto_4.pyimage3(column,row))
+                        objeto_3 = pieza_negra(tn)
+                        k.config(command=lambda row = i, column = tablero.casillas[i].index(k): objeto_3.pyimage3(column,row))
                     elif str(imagen_) =="pyimage3":
-                        objeto_3 = pieza_blanca(tb)
-                        k.config(command=lambda row = i, column = tablero.casillas[i].index(k) :objeto_3.pyimage3(column,row))
+                        objeto_4 = pieza_blanca(tb)
+                        k.config(command=lambda row = i, column = tablero.casillas[i].index(k) :objeto_4.pyimage3(column,row))
                     elif str(imagen_) =="pyimage4":
-                        objeto_3 = pieza_blanca(ab)
-                        k.config(command=lambda row = i, column = tablero.casillas[i].index(k) :objeto_3.pyimage4(column,row))
+                        objeto_5 = pieza_blanca(ab)
+                        k.config(command=lambda row = i, column = tablero.casillas[i].index(k) :objeto_5.pyimage4(column,row))
                     elif str(imagen_) =="pyimage10":
-                        objeto_3 = pieza_negra(an)
-                        k.config(command=lambda row = i, column = tablero.casillas[i].index(k) :objeto_3.pyimage4(column,row))
+                        objeto_6 = pieza_negra(an)
+                        k.config(command=lambda row = i, column = tablero.casillas[i].index(k) :objeto_6.pyimage4(column,row))
                     elif str(imagen_) =="pyimage5":
-                        objeto_3 = pieza_blanca(cb)
-                        k.config(command=lambda row = i, column = tablero.casillas[i].index(k) :objeto_3.pyimage5(column,row))
+                        objeto_7 = pieza_blanca(cb)
+                        k.config(command=lambda row = i, column = tablero.casillas[i].index(k) :objeto_7.pyimage5(column,row))
                     elif str(imagen_) =="pyimage11":
-                        objeto_3 = pieza_negra(cn)
-                        k.config(command=lambda row = i, column = tablero.casillas[i].index(k) :objeto_3.pyimage5(column,row))
+                        objeto_8 = pieza_negra(cn)
+                        k.config(command=lambda row = i, column = tablero.casillas[i].index(k) :objeto_8.pyimage5(column,row))
                     else:
                         k.config(command = "")
     def decorator(self):
@@ -131,30 +129,44 @@ class pieza_blanca:
 
             if value>=0:
                 if column+1>=0:
-                    if dict(tablero.casillas[value][column + 1].config())["image"][-1] !="pyimage2":
-                        color = "purple"
-                    if dict(tablero.casillas[value][column + 1].config())["image"][-1] not in self.piezas:
-                        tablero.casillas[value][column + 1].config(bg=color,command = lambda last_column=column+1,last_square=value :self.mover(first_square,column,last_column,last_square,8,imagen_))
-                    color = "blue"
+                    try:
+                        if dict(tablero.casillas[value][column + 1].config())["image"][-1] !="pyimage2":
+                            color = "purple"
+
+                        if dict(tablero.casillas[value][column + 1].config())["image"][-1] not in self.piezas:
+                            tablero.casillas[value][column + 1].config(bg=color,command = lambda last_column=column+1,last_square=value :self.mover(first_square,column,last_column,last_square,8,imagen_))
+                        color = "blue"
+                    except:
+                        pass
                 if column-1>=0:
-                    if dict(tablero.casillas[value][column - 1].config())["image"][-1] !="pyimage2":
-                        color = "purple"
-                    if dict(tablero.casillas[value][column - 1].config())["image"][-1] not in self.piezas:
-                        tablero.casillas[value][column - 1].config(bg=color, command= lambda last_column =column-1, last_square=value: self.mover(first_square,column,last_column,last_square,8,imagen_))
-                    color = "blue"
+                    try:
+                        if dict(tablero.casillas[value][column - 1].config())["image"][-1] !="pyimage2":
+                            color = "purple"
+                        if dict(tablero.casillas[value][column - 1].config())["image"][-1] not in self.piezas:
+                            tablero.casillas[value][column - 1].config(bg=color, command= lambda last_column =column-1, last_square=value: self.mover(first_square,column,last_column,last_square,8,imagen_))
+                        color = "blue"
+                    except:
+                        pass
             if value_2>=0:
                 if first_square +1 >=0:
-                    if dict(tablero.casillas[first_square+1][value_2].config())["image"][-1] !="pyimage2" :
-                        color = "purple"
-                    if dict(tablero.casillas[first_square+1][value_2].config())["image"][-1] not in self.piezas:
-                        tablero.casillas[first_square + 1][value_2].config(bg=color, command= lambda last_column=value_2,last_square=first_square+1:self.mover(first_square,column,last_column,last_square,8,imagen_))
-                    color = "blue"
+                    try:
+                        if dict(tablero.casillas[first_square+1][value_2].config())["image"][-1] !="pyimage2" :
+                            color = "purple"
+                        if dict(tablero.casillas[first_square+1][value_2].config())["image"][-1] not in self.piezas:
+                            tablero.casillas[first_square + 1][value_2].config(bg=color, command= lambda last_column=value_2,last_square=first_square+1:self.mover(first_square,column,last_column,last_square,8,imagen_))
+                        color = "blue"
+                    except:
+                        pass
                 if first_square-1 >=0 :
-                    if dict(tablero.casillas[first_square-1][value_2].config())["image"][-1] !="pyimage2":
-                        color = "purple"
-                    if dict(tablero.casillas[first_square-1][value_2].config())["image"][-1] not in self.piezas:
-                        tablero.casillas[first_square -1][value_2].config(bg=color, command= lambda last_column=value_2,last_square=first_square-1:self.mover(first_square,column,last_column,last_square,8,imagen_))
-                    color = "blue"
+                    try:
+
+                        if dict(tablero.casillas[first_square-1][value_2].config())["image"][-1] !="pyimage2":
+                            color = "purple"
+                        if dict(tablero.casillas[first_square-1][value_2].config())["image"][-1] not in self.piezas:
+                            tablero.casillas[first_square -1][value_2].config(bg=color, command= lambda last_column=value_2,last_square=first_square-1:self.mover(first_square,column,last_column,last_square,8,imagen_))
+                        color = "blue"
+                    except:
+                        pass
     pass
     def pyimage4(self,column,first_square):
         global sw_w, sw_b
@@ -221,7 +233,8 @@ class pieza_blanca:
             for l in range(1,first_square+1):
                 imagen_5 = dict(tablero.casillas[first_square-l][column-l].config())["image"][-1]
                 if imagen_5 != "pyimage2":
-                    if imagen_5 not in self.piezas and column-l>0:
+                    print(column-l)
+                    if imagen_5 not in self.piezas and column-l>-1:
                         print(column - l)
 
                         tablero.casillas[first_square-l][column-l].config(bg="purple",
@@ -334,15 +347,19 @@ class pieza_blanca:
         assert sw_w == True
 
         self.back_to_normal()
+        print(self.imagen_pieza)
         try:
-            if dict(tablero.casillas[first_square+1][column+1].config())["image"][-1]!="pyimage2":
+            imagen = dict(tablero.casillas[first_square+1][column+1].config())["image"][-1]
+            if dict(tablero.casillas[first_square+1][column+1].config())["image"][-1]!="pyimage2" and str(imagen) not in self.piezas:
                 tablero.casillas[first_square+1][column+1].config(bg ="purple", command= lambda row=first_square+1,last_column=column+1: self.mover(first_square,column,last_column ,row,movimiento,pb))
 
 
         except:
             pass
         try:
-            if dict(tablero.casillas[first_square + 1][column - 1].config())["image"][-1] != "pyimage2" :
+            imagen = dict(tablero.casillas[first_square+1][column-1].config())["image"][-1]
+
+            if dict(tablero.casillas[first_square + 1][column - 1].config())["image"][-1] != "pyimage2" and str(imagen) not in self.piezas:
                 tablero.casillas[first_square + 1][column - 1].config(bg="purple", command=lambda row=first_square + 1,
                                                                                                   last_column=column - 1: self.mover(
                     first_square, column, last_column, row, movimiento,pb))
@@ -373,6 +390,15 @@ class pieza_blanca:
 class pieza_negra(pieza_blanca):
     step = -1
     piezas = ["pyimage8", "pyimage9", "pyimage10", "pyimage11", "pyimage12", "pyimage13"]
+    def pyimage5(self,column,first_square):
+        global sw_w, sw_b
+        print("uwu", sw_b)
+        assert sw_b == True
+        sw_w = True
+        super().pyimage5(column, first_square)
+
+
+
     def pyimage3(self, column, first_square):
         global sw_w , sw_b
 
@@ -390,13 +416,17 @@ class pieza_negra(pieza_blanca):
         objetoo = pieza_blanca(pb)
         objetoo.back_to_normal()
         try:
-            if dict(tablero.casillas[first_square - 1][column - 1].config())["image"][-1] != "pyimage2" :
+            imagen = dict(tablero.casillas[first_square-1][column-1].config())["image"][-1]
+
+            if dict(tablero.casillas[first_square - 1][column - 1].config())["image"][-1] != "pyimage2" and str(imagen)  not in self.piezas:
                 tablero.casillas[first_square - 1][column - 1].config(bg="purple", command=lambda last_square=first_square-1,last_column=column -1: self.mover(
                     first_square, column, column-1, first_square-1, movimiento,pn))
         except:
             pass
         try:
-            if dict(tablero.casillas[first_square - 1][column + 1].config())["image"][-1] != "pyimage2":
+            imagen = dict(tablero.casillas[first_square+1][column+1].config())["image"][-1]
+
+            if dict(tablero.casillas[first_square - 1][column + 1].config())["image"][-1] != "pyimage2"  and str(imagen)  not in self.piezas:
                 tablero.casillas[first_square - 1][column + 1].config(bg="purple", command=lambda row=first_square-1,last_column=column+1: self.mover(
                     first_square, column, column+1, first_square-1, movimiento,pn))
         except:
@@ -424,7 +454,6 @@ class pieza_negra(pieza_blanca):
         global sw_w, sw_b
         sw_w = True
         sw_b = False
-
 
 
 
