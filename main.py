@@ -47,14 +47,17 @@ class tablero():
         white_tr = pieza_blanca(tb)
         white_al = pieza_blanca(ab)
         white_cb = pieza_blanca(cb)
+        white_qn = pieza_blanca(qb)
+        black_qn = pieza_negra(qn)
         black_cb = pieza_negra(cn)
         black_tr = pieza_negra(tn)
         black_al = pieza_negra(an)
+
         self.casillas[0][0].config(image=tb, command=lambda : white_tr.pyimage3(0, 0))
         self.casillas[0][1].config(image=cb,command=lambda : white_cb.pyimage5(1,0))
         self.casillas[0][2].config(image=ab, command = lambda : white_al.pyimage4(2,0))
         self.casillas[0][3].config(image=rb)
-        self.casillas[0][-4].config(image=qb)
+        self.casillas[0][-4].config(image=qb, command= lambda :white_qn.pyimage7(4,0))
         self.casillas[0][-3].config(image=ab, command = lambda : white_al.pyimage4(5,0))
         self.casillas[0][-2].config(image=cb, command = lambda : white_cb.pyimage5(6,0))
         self.casillas[0][-1].config(image=tb,  command=lambda : white_tr.pyimage3(7, 0))
@@ -62,9 +65,8 @@ class tablero():
         self.casillas[7][0].config(image=tn, command=lambda : black_tr.pyimage3(0, 7))
         self.casillas[7][1].config(image=cn, command= lambda : black_cb.pyimage5(1,7))
         self.casillas[7][2].config(image=an,command = lambda : black_al.pyimage4(2,7))
-
         self.casillas[7][3].config(image=rn)
-        self.casillas[7][-4].config(image=qn)
+        self.casillas[7][-4].config(image=qn, command=lambda :black_qn.pyimage7(4,7))
         self.casillas[7][-3].config(image=an, command=lambda: black_al.pyimage4(5, 7))
         self.casillas[7][-2].config(image=cn, command=lambda :black_cb.pyimage5(6,7))
         self.casillas[7][-1].config(image=tn, command=lambda : black_al.pyimage3(7, 7))
@@ -112,6 +114,12 @@ class pieza_blanca:
                     elif str(imagen_) =="pyimage11":
                         objeto_8 = pieza_negra(cn)
                         k.config(command=lambda row = i, column = tablero.casillas[i].index(k) :objeto_8.pyimage5(column,row))
+                    elif str(imagen_) =="pyimage13":
+                        objeto_9 = pieza_negra(qn)
+                        k.config(command=lambda row = i, column = tablero.casillas[i].index(k) :objeto_9.pyimage7(column,row))
+                    elif str(imagen_) =="pyimage7":
+                        objeto_10 = pieza_blanca(qn)
+                        k.config(command=lambda row = i, column = tablero.casillas[i].index(k) :objeto_10.pyimage7(column,row))
                     else:
                         k.config(command = "")
     def decorator(self):
@@ -171,6 +179,7 @@ class pieza_blanca:
     def pyimage4(self,column,first_square):
         global sw_w, sw_b
         assert sw_w == True
+        start = 1
         self.back_to_normal()
         imagen_ =  dict(tablero.casillas[first_square][column].config())["image"][-1]
         try:
@@ -213,6 +222,7 @@ class pieza_blanca:
         except:
             pass
                 #arriba
+
         try:
             for j in range(1,first_square+1):
                 imagen_4 = dict(tablero.casillas[first_square-j][column+j].config())["image"][-1]
@@ -255,7 +265,11 @@ class pieza_blanca:
     def pyimage3(self, column, first_square):
         global sw_w, sw_b
         assert sw_w == True
-        self.back_to_normal()
+
+        if str(self.imagen_pieza) =="pyimage7" or str(self.imagen_pieza) =="pyimage13":
+            pass
+        else:
+            self.back_to_normal()
         imagen_ =  dict(tablero.casillas[first_square][column].config())["image"][-1]
         #Derecha
         try:
@@ -371,6 +385,14 @@ class pieza_blanca:
                 break
 
             tablero.casillas[i][column].config(bg ="blue", command= lambda row=i: self.mover(first_square,column,column, row, movimiento-1,pb))
+    def pyimage7(self,column,first_square):
+        global sw_w, sw_b
+        assert sw_w == True
+
+        self.pyimage4(column,first_square)
+        print("........")
+        self.pyimage3(column,first_square)
+
 
     def mover(self,first_square,column,last_column,last_square,lenght,pieza):
 
@@ -390,9 +412,15 @@ class pieza_blanca:
 class pieza_negra(pieza_blanca):
     step = -1
     piezas = ["pyimage8", "pyimage9", "pyimage10", "pyimage11", "pyimage12", "pyimage13"]
+    def pyimage7(self,column,first_square):
+        print(":c")
+        global sw_w, sw_b
+        assert sw_b == True
+        sw_w = True
+        super().pyimage7(column, first_square)
+
     def pyimage5(self,column,first_square):
         global sw_w, sw_b
-        print("uwu", sw_b)
         assert sw_b == True
         sw_w = True
         super().pyimage5(column, first_square)
@@ -401,13 +429,14 @@ class pieza_negra(pieza_blanca):
 
     def pyimage3(self, column, first_square):
         global sw_w , sw_b
-
         assert sw_b ==True
         sw_w = True
         super().pyimage3(column,first_square)
     def pyimage4(self, column, first_square):
         global sw_w , sw_b
         assert sw_b ==True
+
+
         sw_w = True
         super().pyimage4(column,first_square)
     def pyimage8(self, column, first_square, movimiento=-1):
