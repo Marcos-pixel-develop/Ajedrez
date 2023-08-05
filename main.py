@@ -143,18 +143,6 @@ class pieza_blanca:
                         k.config(command=lambda row=i, column=tablero.casillas[i].index(k): objeto_12.rey(column, row))
                     else:
                         k.config(command = "")
-        first_square = fila_r
-        column = column_r
-        imagen_rey = dict(tablero.casillas[0][3].config())["image"][-1]
-        # verificar casillas
-        for u in range(3):
-            for j in range(3):
-                if first_square - 1 + u <= 7 and column - 1 + j <= 7 and first_square - 1 + u >= 0 and column - 1 + j >= 0:
-                    imagen_ = dict(tablero.casillas[first_square - 1 + u][column - 1 + j].config())["image"][-1]
-                    if imagen_ != imagen_rey and first_square - 1 + u >= 0 and column - 1 + j >= 0:
-                        if imagen_ == "pyimage2":
-                            tablero.casillas[first_square - 1 + u][column - 1 + j].config(command= lambda last_square= first_square - 1 + u, last_column=column - 1 + j: self.mover(first_square,column,last_column,last_square,8,imagen))
-
 
     def decorator(self):
         pass
