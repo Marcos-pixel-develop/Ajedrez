@@ -233,90 +233,181 @@ class pieza_blanca:
                     except:
                         pass
     pass
-    def pyimage4(self,column,first_square):
+
+    def pyimage3(self, column, first_square):
         global sw_w, sw_b
         assert sw_w == True
-        start = 1
-        self.back_to_normal()
-        imagen_ =  dict(tablero.casillas[first_square][column].config())["image"][-1]
-        try:
-            for i in range(first_square+1,8):
 
-                imagen_2 = dict(tablero.casillas[i][column+i-first_square].config())["image"][-1]
-                if imagen_2 !="pyimage2" :
+        if str(self.imagen_pieza) == "pyimage7" or str(self.imagen_pieza) == "pyimage13":
+            pass
+        else:
+            self.back_to_normal()
+        imagen_ = dict(tablero.casillas[first_square][column].config())["image"][-1]
+        # Derecha
+        try:
+            for i in range(column + 1, 8):
+                imagen_2 = dict(tablero.casillas[first_square][i].config())["image"][-1]
+                if imagen_2 != "pyimage2":
                     if imagen_2 not in self.piezas:
-                            tablero.casillas[i][column+i-first_square].config(bg="#FF6666",
-                                                                 command=lambda last_square=i ,last_column=column+i-first_square: self.mover(first_square,
+                        tablero.casillas[first_square][i].config(bg="#FF6666",
+                                                                 command=lambda last_column=i: self.mover(first_square,
                                                                                                           column,
                                                                                                           last_column,
-                                                                                                          last_square, 8,
+                                                                                                          first_square,
+                                                                                                          8,
                                                                                                           imagen_))
                     break
 
-                tablero.casillas[i][column+i-first_square].config(bg="#99FFFF",command=lambda last_square=i,last_column=column+i-first_square: self.mover(first_square, column,last_column,last_square, 8,imagen_))
+                tablero.casillas[first_square][i].config(bg="#99FFFF",
+                                                         command=lambda last_column=i: self.mover(first_square, column,
+                                                                                                  last_column,
+                                                                                                  first_square, 8,
+                                                                                                  imagen_))
         except:
             pass
-        #Izquierda
+        # Izquierda
         try:
-            for k in range(first_square+1,8):
-                imagen_3 = dict(tablero.casillas[k][column-k+first_square].config())["image"][-1]
+            for k in range(column - 1, -1, -1):
+                imagen_3 = dict(tablero.casillas[first_square][k].config())["image"][-1]
                 if imagen_3 != "pyimage2":
-                    if imagen_3 not in self.piezas and column-k+first_square>=0:
-                        tablero.casillas[k][column-k+first_square].config(bg="#FF6666",
-                                                             command=lambda last_square = k,last_column=column-k+first_square: self.mover(first_square,
-                                                                                                      column,
-                                                                                                      last_column,
-                                                                                                      last_square, 8,
-                                                                                                      imagen_))
+                    if imagen_3 not in self.piezas:
+                        tablero.casillas[first_square][k].config(bg="#FF6666",
+                                                                 command=lambda last_column=k: self.mover(first_square,
+                                                                                                          column,
+                                                                                                          last_column,
+                                                                                                          first_square,
+                                                                                                          8,
+                                                                                                          imagen_))
                     break
-                if column-k+first_square<0:
-                    break
-                tablero.casillas[k][column-k+first_square].config(bg="99FFFF",
-                                                                  command=lambda last_square = k,last_column=column-k+first_square: self.mover(
-                                                                      first_square, column,
-                                                                      last_column, last_square,
-                                                                      8, imagen_))
+
+                tablero.casillas[first_square][k].config(bg="#99FFFF",
+                                                         command=lambda last_column=k: self.mover(
+                                                             first_square, column,
+                                                             last_column, first_square,
+                                                             8, imagen_))
         except:
             pass
-                #arriba
-
+            # arriba
         try:
-            for j in range(1,first_square+1):
-                imagen_4 = dict(tablero.casillas[first_square-j][column+j].config())["image"][-1]
+            for j in range(first_square + 1, 8):
+                imagen_4 = dict(tablero.casillas[j][column].config())["image"][-1]
                 if imagen_4 != "pyimage2":
                     if imagen_4 not in self.piezas:
-                        tablero.casillas[first_square-j][column+j].config(bg="#FF6666",
-                                                             command=lambda last_column=column+j,last_square=first_square-j: self.mover(first_square,
-                                                                                                      column,
-                                                                                                      last_column,
-                                                                                                      last_square, 8,
-                                                                                                      imagen_))
+                        tablero.casillas[j][column].config(bg="#FF6666",
+                                                           command=lambda last_square=j: self.mover(first_square,
+                                                                                                    column,
+                                                                                                    column,
+                                                                                                    last_square, 8,
+                                                                                                    imagen_))
                     break
-                tablero.casillas[first_square-j][column+j].config(bg="#99FFFF", command=lambda last_column = column+j , last_square=first_square-j: self.mover(first_square, column,last_column, last_square, 8,imagen_))
+                tablero.casillas[j][column].config(bg="#99FFFF",
+                                                   command=lambda last_square=j: self.mover(first_square, column,
+                                                                                            column, last_square, 8,
+                                                                                            imagen_))
         except:
             pass
-        #abajo
+        # abajo
         try:
-            for l in range(1,first_square+1):
-                imagen_5 = dict(tablero.casillas[first_square-l][column-l].config())["image"][-1]
+            for l in range(first_square - 1, -1, -1):
+                imagen_5 = dict(tablero.casillas[l][column].config())["image"][-1]
                 if imagen_5 != "pyimage2":
-                    if imagen_5 not in self.piezas and column-l>-1:
-
-                        tablero.casillas[first_square-l][column-l].config(bg="#FF6666",
-                                                             command=lambda last_column=column-l,last_square=first_square-l: self.mover(first_square,
-                                                                                                      column,
-                                                                                                      last_column,
-                                                                                                      last_square, 8,
-                                                                                                      imagen_))
+                    if imagen_5 not in self.piezas:
+                        tablero.casillas[l][column].config(bg="#FF6666",
+                                                           command=lambda last_square=l: self.mover(first_square,
+                                                                                                    column,
+                                                                                                    column,
+                                                                                                    last_square, 8,
+                                                                                                    imagen_))
                     break
-                if column-l<0:
-                    break
-                tablero.casillas[first_square-l][column-l].config(bg="#99FFFF",
-                                                   command=lambda last_column = column-l,last_square=first_square-l: self.mover(first_square, column, last_column,
+                tablero.casillas[l][column].config(bg="#99FFFF",
+                                                   command=lambda last_square=l: self.mover(first_square, column,
+                                                                                            column,
                                                                                             last_square, 8, imagen_))
         except:
             pass
 
+
+    def pyimage3(self, column, first_square):
+        global sw_w, sw_b
+        assert sw_w == True
+
+        if str(self.imagen_pieza) =="pyimage7" or str(self.imagen_pieza) =="pyimage13":
+            pass
+        else:
+            self.back_to_normal()
+        imagen_ =  dict(tablero.casillas[first_square][column].config())["image"][-1]
+        #Derecha
+        try:
+            for i in range(column+1,8):
+                imagen_2 = dict(tablero.casillas[first_square][i].config())["image"][-1]
+                if imagen_2 !="pyimage2" :
+                    if imagen_2 not in self.piezas:
+                            tablero.casillas[first_square][i].config(bg="#FF6666",
+                                                                 command=lambda last_column=i: self.mover(first_square,
+                                                                                                          column,
+                                                                                                          last_column,
+                                                                                                          first_square, 8,
+                                                                                                          imagen_))
+                    break
+
+                tablero.casillas[first_square][i].config(bg="#99FFFF",command=lambda last_column=i: self.mover(first_square, column,last_column,first_square, 8,imagen_))
+        except:
+            pass
+        #Izquierda
+        try:
+            for k in range(column-1, -1,-1):
+                imagen_3 = dict(tablero.casillas[first_square][k].config())["image"][-1]
+                if imagen_3 != "pyimage2":
+                    if imagen_3 not in self.piezas:
+                        tablero.casillas[first_square][k].config(bg="#FF6666",
+                                                             command=lambda last_column=k: self.mover(first_square,
+                                                                                                      column,
+                                                                                                      last_column,
+                                                                                                      first_square, 8,
+                                                                                                      imagen_))
+                    break
+
+                tablero.casillas[first_square][k].config(bg="#99FFFF",
+                                                                  command=lambda last_column=k: self.mover(
+                                                                      first_square, column,
+                                                                      last_column, first_square,
+                                                                      8, imagen_))
+        except:
+            pass
+                #arriba
+        try:
+            for j in range(first_square+1,8):
+                imagen_4 = dict(tablero.casillas[j][column].config())["image"][-1]
+                if imagen_4 != "pyimage2":
+                    if imagen_4 not in self.piezas:
+                        tablero.casillas[j][column].config(bg="#FF6666",
+                                                             command=lambda last_square=j: self.mover(first_square,
+                                                                                                      column,
+                                                                                                      column,
+                                                                                                      last_square, 8,
+                                                                                                      imagen_))
+                    break
+                tablero.casillas[j][column].config(bg="#99FFFF", command=lambda last_square=j: self.mover(first_square, column,column, last_square, 8,imagen_))
+        except:
+            pass
+        #abajo
+        try:
+            for l in range(first_square-1, -1,-1):
+                imagen_5 = dict(tablero.casillas[l][column].config())["image"][-1]
+                if imagen_5 != "pyimage2":
+                    if imagen_5 not in self.piezas:
+                        tablero.casillas[l][column].config(bg="#FF6666",
+                                                             command=lambda last_square=l: self.mover(first_square,
+                                                                                                      column,
+                                                                                                      column,
+                                                                                                      last_square, 8,
+                                                                                                      imagen_))
+                    break
+                tablero.casillas[l][column].config(bg="#99FFFF",
+                                                   command=lambda last_square=l: self.mover(first_square, column, column,
+                                                                                            last_square, 8, imagen_))
+        except:
+            pass
     def pyimage4(self, column, first_square):
         global sw_w, sw_b
         assert sw_w == True
