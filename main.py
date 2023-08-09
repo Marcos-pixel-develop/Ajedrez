@@ -4,10 +4,12 @@ press = True
 
 # Crear una instancia de la clase Tk (raíz de la aplicación)
 from PIL import Image, ImageTk
+amen = True
 
 sw_w=True
 sw_b=False
 casillas_amenazadas = []
+
 # Cargar la imagen y mantener una referencia
 class tablero():
 
@@ -108,6 +110,8 @@ class tablero():
 
 fila_r= 0
 column_r=3
+
+rey_risk = False
 class pieza_blanca:
     piezas = ["pyimage1","pyimage3" , "pyimage4", "pyimage5", "pyimage6", "pyimage7"]
 
@@ -122,6 +126,8 @@ class pieza_blanca:
 
         global fila_r,column_r,casillas_amenazadas
         casillas_amenazadas= []
+
+
         rgb_color = (74, 175, 58)
         hex_color = "#{:02x}{:02x}{:02x}".format(rgb_color[0], rgb_color[1], rgb_color[2])
         rgb_color_2 = (168, 135, 28)
@@ -182,8 +188,9 @@ class pieza_blanca:
         pass
 
     def pyimage5(self,column,first_square):
-        global sw_w, sw_b
+        global sw_w, sw_b , rey_risk
         assert sw_w == True
+        assert rey_risk ==False
         self.back_to_normal()
         imagen_ =  dict(tablero.casillas[first_square][column].config())["image"][-1]
         lista = [2, -2]
@@ -235,9 +242,9 @@ class pieza_blanca:
     pass
 
     def pyimage3(self, column, first_square):
-        global sw_w, sw_b
+        global sw_w, sw_b, rey_risk
         assert sw_w == True
-
+        assert rey_risk==False
         if str(self.imagen_pieza) == "pyimage7" or str(self.imagen_pieza) == "pyimage13":
             pass
         else:
@@ -326,10 +333,10 @@ class pieza_blanca:
         except:
             pass
 
-
     def pyimage3(self, column, first_square):
-        global sw_w, sw_b
+        global sw_w, sw_b,rey_risk
         assert sw_w == True
+        assert rey_risk==False
 
         if str(self.imagen_pieza) =="pyimage7" or str(self.imagen_pieza) =="pyimage13":
             pass
@@ -409,8 +416,9 @@ class pieza_blanca:
         except:
             pass
     def pyimage4(self, column, first_square):
-        global sw_w, sw_b
+        global sw_w, sw_b, rey_risk
         assert sw_w == True
+        assert rey_risk==False
         start = 1
         self.back_to_normal()
         imagen_ = dict(tablero.casillas[first_square][column].config())["image"][-1]
@@ -486,10 +494,7 @@ class pieza_blanca:
             for l in range(1, first_square + 1):
                 imagen_5 = dict(tablero.casillas[first_square - l][column - l].config())["image"][-1]
                 if imagen_5 != "pyimage2":
-                    print(column - l)
                     if imagen_5 not in self.piezas and column - l > -1:
-                        print(column - l)
-
                         tablero.casillas[first_square - l][column - l].config(bg="#FF6666",
                                                                               command=lambda last_column=column - l,
                                                                                              last_square=first_square - l: self.mover(
@@ -509,11 +514,13 @@ class pieza_blanca:
         except:
             pass
     def pyimage1(self, column, first_square, movimiento=1):
-        global sw_w, sw_b
+        global sw_w, sw_b,rey_risk
+        assert rey_risk== False
         #amenaza
 
 
         assert sw_w == True
+
         self.back_to_normal()
         try:
             imagen = dict(tablero.casillas[first_square+1][column+1].config())["image"][-1]
@@ -533,30 +540,34 @@ class pieza_blanca:
                     first_square, column, last_column, row, movimiento,pb))
         except:
             pass
+        if first_square==1:
+            movimiento =2
         for i in range(first_square+self.step,first_square+self.step+movimiento,self.step):
             configuracion = tablero.casillas[i][column].config()
             if dict(configuracion)["image"][-1] !="pyimage2":
                 break
 
             tablero.casillas[i][column].config(bg ="#99FFFF", command= lambda row=i: self.mover(first_square,column,column, row, movimiento-1,pb))
-
-
     def revisar(self,column,first_square):
-        global sw_w, sw_b, casillas_amenazadas
+
+        global sw_w, sw_b, casillas_amenazadas, fila_r,column_r, rey_risk
+        first_square__ = 2
+        columna = 3
+
         assert sw_w == True
         # Derecha
-        claseA = pieza_blanca(rb)
-        claseB =pieza_negra(rn)
         try:
             if str(self.imagen_pieza) == "pyimage6":
                 imagen = dict(tablero.casillas[first_square+1][column+1].config())["image"][-1]
+
             if str(self.imagen_pieza) == "pyimage12":
                 imagen = dict(tablero.casillas[first_square-1][column+1].config())["image"][-1]
 
-            if imagen!="pyimage2":
+            if imagen !="pyimage2":
                 if str(self.imagen_pieza) =="pyimage6":
                     if imagen == "pyimage8":
                         casillas_amenazadas.append(tablero.casillas[first_square][column])
+
 
                 elif str(self.imagen_pieza) =="pyimage12":
                     if imagen == "pyimage1":
@@ -589,11 +600,11 @@ class pieza_blanca:
                 imagen_2 = dict(tablero.casillas[first_square][i].config())["image"][-1]
                 if imagen_2 != "pyimage2" and imagen_2!=str(self.imagen_pieza):
                     if str(self.imagen_pieza) == "pyimage6":
-                        if imagen_2 == "pyimage9":
+                        if imagen_2 == "pyimage9" or imagen_2 == "pyimage13":
                             casillas_amenazadas.append(tablero.casillas[first_square][column])
 
                     elif str(self.imagen_pieza) == "pyimage12":
-                        if imagen_2 == "pyimage3":
+                        if imagen_2 == "pyimage3" or imagen_2 == "pyimage7":
                             casillas_amenazadas.append(tablero.casillas[first_square][column])
 
                     break
@@ -608,11 +619,11 @@ class pieza_blanca:
 
                 if imagen_2 != "pyimage2" and imagen_2!=str(self.imagen_pieza) :
                     if str(self.imagen_pieza) =="pyimage6":
-                        if imagen_2 == "pyimage10":
+                        if imagen_2 == "pyimage10" or imagen_2 == "pyimage13":
                             casillas_amenazadas.append(tablero.casillas[first_square][column])
 
                     elif str(self.imagen_pieza)=="pyimage12":
-                        if imagen_2 == "pyimage4":
+                        if imagen_2 == "pyimage4" or imagen_2 == "pyimage7":
                             casillas_amenazadas.append(tablero.casillas[first_square][column])
 
                     break
@@ -623,11 +634,11 @@ class pieza_blanca:
                 imagen_4 = dict(tablero.casillas[first_square-j][column+j].config())["image"][-1]
                 if imagen_4 != "pyimage2" and imagen_4!=str(self.imagen_pieza) :
                     if str(self.imagen_pieza) == "pyimage6":
-                        if imagen_4 == "pyimage10":
+                        if imagen_4 == "pyimage10" or imagen_4 == "pyimage13":
                             casillas_amenazadas.append(tablero.casillas[first_square][column])
 
                     elif str(self.imagen_pieza) == "pyimage12":
-                        if imagen_4 == "pyimage4":
+                        if imagen_4 == "pyimage4" or imagen_4 == "pyimage7":
                             casillas_amenazadas.append(tablero.casillas[first_square][column])
 
                     break
@@ -638,11 +649,11 @@ class pieza_blanca:
                 imagen_3 = dict(tablero.casillas[k][column-k+first_square].config())["image"][-1]
                 if imagen_3 != "pyimage2" and imagen_3!=str(self.imagen_pieza) :
                     if str(self.imagen_pieza) == "pyimage6":
-                        if imagen_3 == "pyimage10":
+                        if imagen_3 == "pyimage10" or imagen_3 == "pyimage13":
                             casillas_amenazadas.append(tablero.casillas[first_square][column])
 
                     elif str(self.imagen_pieza) == "pyimage12":
-                        if imagen_3 == "pyimage4":
+                        if imagen_3 == "pyimage4" or  imagen_3 == "pyimage7":
                             casillas_amenazadas.append(tablero.casillas[first_square][column])
 
                     break
@@ -655,13 +666,13 @@ class pieza_blanca:
         try:
             for l in range(1, first_square + 1):
                 imagen_5 = dict(tablero.casillas[first_square - l][column - l].config())["image"][-1]
-                if imagen_5 != "pyimage2" and imagen_5!=str(self.imagen_pieza) :
+                if imagen_5 != "pyimage2" and imagen_5!=str(self.imagen_pieza):
                     if str(self.imagen_pieza) == "pyimage6":
-                        if imagen_5 == "pyimage10":
+                        if imagen_5 == "pyimage10" or imagen_5 == "pyimage13":
                             casillas_amenazadas.append(tablero.casillas[first_square][column])
 
                     elif str(self.imagen_pieza) == "pyimage12":
-                        if imagen_5 == "pyimage4":
+                        if imagen_5 == "pyimage4" or imagen_5 == "pyimage7":
                             casillas_amenazadas.append(tablero.casillas[first_square][column])
 
                     break
@@ -675,11 +686,11 @@ class pieza_blanca:
                 imagen_4 = dict(tablero.casillas[j][column].config())["image"][-1]
                 if imagen_4 != "pyimage2" and imagen_4!=str(self.imagen_pieza) :
                     if str(self.imagen_pieza) == "pyimage6":
-                        if imagen_4 == "pyimage9":
+                        if imagen_4 == "pyimage9" or imagen_4 == "pyimage9":
                             casillas_amenazadas.append(tablero.casillas[first_square][column])
 
                     elif str(self.imagen_pieza) == "pyimage12":
-                        if imagen_4 == "pyimage3":
+                        if imagen_4 == "pyimage3" or imagen_4 == "pyimage7":
                             casillas_amenazadas.append(tablero.casillas[first_square][column])
 
                     break
@@ -689,7 +700,6 @@ class pieza_blanca:
         for i in range(2):
             value = first_square + lista[i]
             value_2 = column + lista[i]
-
             if value >= 0:
                 if column + 1 >= 0:
                     try:
@@ -703,7 +713,7 @@ class pieza_blanca:
                                 if dict(tablero.casillas[value][column + 1].config())["image"][-1]=="pyimage5":
                                     casillas_amenazadas.append(tablero.casillas[first_square][column])
 
-                            break
+
 
                     except:
                         pass
@@ -718,7 +728,7 @@ class pieza_blanca:
                                 if dict(tablero.casillas[value][column - 1].config())["image"][-1] == "pyimage5":
                                     casillas_amenazadas.append(tablero.casillas[first_square][column])
 
-                            break
+
 
 
                     except:
@@ -735,7 +745,7 @@ class pieza_blanca:
                                 if dict(tablero.casillas[first_square+1][value_2].config())["image"][-1] == "pyimage5":
                                     casillas_amenazadas.append(tablero.casillas[first_square][column])
 
-                            break
+
                     except:
                         pass
                 if first_square - 1 >= 0:
@@ -750,7 +760,7 @@ class pieza_blanca:
                                 if dict(tablero.casillas[first_square-1][value_2].config())["image"][-1] == "pyimage5":
                                     casillas_amenazadas.append(tablero.casillas[first_square][column])
 
-                            break
+
 
                     except:
                         pass
@@ -760,34 +770,39 @@ class pieza_blanca:
                 imagen_3 = dict(tablero.casillas[first_square][k].config())["image"][-1]
                 if imagen_3 != "pyimage2" and imagen_3!=str(self.imagen_pieza):
                     if str(self.imagen_pieza) == "pyimage6":
-                        if imagen_3 == "pyimage9":
+                        if imagen_3 == "pyimage9" or imagen_3 == "pyimage13":
                             casillas_amenazadas.append(tablero.casillas[first_square][column])
 
                     elif str(self.imagen_pieza) == "pyimage12":
-                        if imagen_3 == "pyimage3":
+                        if imagen_3 == "pyimage3" or imagen_3 == "pyimage7":
                             casillas_amenazadas.append(tablero.casillas[first_square][column])
 
                     break
         except:
             pass
+
         try:
             for l in range(first_square-1, -1,-1):
                 imagen_5 = dict(tablero.casillas[l][column].config())["image"][-1]
                 if imagen_5 != "pyimage2" and imagen_5!=str(self.imagen_pieza):
                     if str(self.imagen_pieza) == "pyimage6":
-                        if imagen_5 == "pyimage9":
+                        if imagen_5 == "pyimage9" or imagen_5 == "pyimage13":
                             casillas_amenazadas.append(tablero.casillas[first_square][column])
 
                     elif str(self.imagen_pieza) == "pyimage12":
-                        if imagen_5 == "pyimage3":
+                        if imagen_5 == "pyimage3" or imagen_5 == "pyimage7":
                             casillas_amenazadas.append(tablero.casillas[first_square][column])
 
                     break
         except:
+
             pass
 
+
+
+
     def rey(self, column, first_square):
-        global sw_w,sw_b, casillas_amenazadas
+        global sw_w,sw_b, casillas_amenazadas, fila_r,column_r
         assert  sw_w == True
         self.back_to_normal()
         imagen = dict(tablero.casillas[first_square][column].config())["image"][-1]
@@ -808,19 +823,20 @@ class pieza_blanca:
                         elif imagen_ == "pyimage2":
                             tablero.casillas[first_square-1+i][column-1+j].config(bg="#99FFFF",
                                                                command=lambda last_square=first_square-1+i,last_column=column-1+j: self.mover(first_square, column, last_column,last_square,                                                                    8, imagen))
-
-
     def pyimage7(self,column,first_square):
-        global sw_w, sw_b
+        global sw_w, sw_b,rey_risk
         assert sw_w == True
+        assert  rey_risk==False
 
         self.pyimage4(column,first_square)
         self.pyimage3(column,first_square)
-
-
     def mover(self,first_square,column,last_column,last_square,lenght,pieza):
 
-        global sw_w, sw_b
+        global sw_w, sw_b, fila_r,column_r
+        if str(pieza)=="pyimage6":
+            fila_r= last_square
+            column_r= last_column
+        print(fila_r,column_r)
         #func =getattr(self,function_name,None)
 
         tablero.casillas[last_square][last_column].config(image=pieza)
@@ -884,20 +900,22 @@ class pieza_negra(pieza_blanca):
         try:
             imagen = dict(tablero.casillas[first_square-1][column-1].config())["image"][-1]
 
-            if dict(tablero.casillas[first_square - 1][column - 1].config())["image"][-1] != "pyimage2" and str(imagen)  not in self.piezas:
+            if dict(tablero.casillas[first_square - 1][column - 1].config())["image"][-1] != "pyimage2" and str(imagen) not in self.piezas:
                 tablero.casillas[first_square - 1][column - 1].config(bg="#FF6666", command=lambda last_square=first_square-1,last_column=column -1: self.mover(
                     first_square, column, column-1, first_square-1, movimiento,pn))
         except:
             pass
         try:
-            imagen = dict(tablero.casillas[first_square+1][column+1].config())["image"][-1]
+            imagen = dict(tablero.casillas[first_square-1][column+1].config())["image"][-1]
 
-            if dict(tablero.casillas[first_square - 1][column + 1].config())["image"][-1] != "pyimage2"  and str(imagen)  not in self.piezas:
+            if dict(tablero.casillas[first_square - 1][column + 1].config())["image"][-1] != "pyimage2"  and str(imagen) not in self.piezas:
                 tablero.casillas[first_square - 1][column + 1].config(bg="#FF6666", command=lambda row=first_square-1,last_column=column+1: self.mover(
                     first_square, column, column+1, first_square-1, movimiento,pn))
         except:
             pass
 
+        if first_square==6:
+            movimiento =-2
         for i in range(first_square+self.step,first_square+self.step+movimiento,self.step):
             configuracion = tablero.casillas[i][column].config()
             if dict(configuracion)["image"][-1] != "pyimage2":
@@ -928,46 +946,46 @@ class pieza_negra(pieza_blanca):
 if __name__ == "__main__":
     root = tk.Tk()
     img = Image.open("images/peon-blanco.png")
-    img = img.resize((50, 50), Image.ANTIALIAS)
+    img = img.resize((50, 50), Image.BILINEAR)
     pb = ImageTk.PhotoImage(img)
     img_2 = Image.open("images/nada.png")
-    img_2 = img_2.resize((50, 50), Image.ANTIALIAS)
+    img_2 = img_2.resize((50, 50), Image.BILINEAR)
     default = ImageTk.PhotoImage(img_2)
     img = Image.open("images/torre-blanca.png")
-    img = img.resize((50, 50), Image.ANTIALIAS)
+    img = img.resize((50, 50), Image.BILINEAR)
     tb = ImageTk.PhotoImage(img)
     img = Image.open("images/alfil-blanco.png")
-    img = img.resize((50, 50), Image.ANTIALIAS)
+    img = img.resize((50, 50), Image.BILINEAR)
     ab= ImageTk.PhotoImage(img)
     img = Image.open("images/caballo-blanco.png")
-    img = img.resize((50, 50), Image.ANTIALIAS)
+    img = img.resize((50, 50), Image.BILINEAR)
     cb = ImageTk.PhotoImage(img)
     img = Image.open("images/rey-blanco.png")
-    img = img.resize((50, 50), Image.ANTIALIAS)
+    img = img.resize((50, 50), Image.BILINEAR)
     rb = ImageTk.PhotoImage(img)
     img = Image.open("images/reina-blanca.png")
-    img = img.resize((50, 50), Image.ANTIALIAS)
+    img = img.resize((50, 50), Image.BILINEAR)
     qb = ImageTk.PhotoImage(img)
 
 
     """PIEZAS NEGRAS"""
     img = Image.open("images/peon-negro.png")
-    img = img.resize((50, 50), Image.ANTIALIAS)
+    img = img.resize((50, 50), Image.BILINEAR)
     pn = ImageTk.PhotoImage(img)
     img = Image.open("images/torre-negra.png")
-    img = img.resize((50, 50), Image.ANTIALIAS)
+    img = img.resize((50, 50), Image.BILINEAR)
     tn = ImageTk.PhotoImage(img)
     img = Image.open("images/alfil-negro.png")
-    img = img.resize((50, 50), Image.ANTIALIAS)
+    img = img.resize((50, 50), Image.BILINEAR)
     an = ImageTk.PhotoImage(img)
     img = Image.open("images/caballo-negro.png")
-    img = img.resize((50, 50), Image.ANTIALIAS)
+    img = img.resize((50, 50), Image.BILINEAR)
     cn = ImageTk.PhotoImage(img)
     img = Image.open("images/rey-negro.png")
-    img = img.resize((50, 50), Image.ANTIALIAS)
+    img = img.resize((50, 50), Image.BILINEAR)
     rn = ImageTk.PhotoImage(img)
     img = Image.open("images/reina-negra.png")
-    img = img.resize((50, 50), Image.ANTIALIAS)
+    img = img.resize((50, 50), Image.BILINEAR)
     qn = ImageTk.PhotoImage(img)
 
     tablero_ajedrez = tablero(root)
